@@ -1,5 +1,5 @@
-# ER-C20
-ERC-20 Token
+# ERC-20
+ERC-20 Token (Test Coin)
 
 ## Functions
 - Pause
