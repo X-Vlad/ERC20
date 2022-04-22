@@ -52,20 +52,24 @@ contract TestCoin {
 		isBlacklisted[_user] = false;
 	}
 
-	function transfer(address _to, uint numTokens) public returns (bool) {
+	function transfer(address _to, uint _amount) public returns (bool) {
 		require(paused == false, "Contract Paused");
 		require(!isBlacklisted[_to], "Recipient is backlisted");
 
-		require(numTokens <= balances[msg.sender]);
-		balances[msg.sender] -= numTokens;
-		balances[_to] += numTokens;
-		emit Transfer(msg.sender, _to, numTokens);
+		require(_amount <= balances[msg.sender]);
+		balances[msg.sender] -= _amount;
+		balances[_to] += _amount;
+		
+		emit Transfer(msg.sender, _to, _amount);
+		
 		return true;
 	}
 
-	function approve(address delegate, uint numTokens) public returns (bool) {
-		allowed[msg.sender][delegate] = numTokens;
-		emit Approval(msg.sender, delegate, numTokens);
+	function approve(address delegate, uint amount) public returns (bool) {
+		allowed[msg.sender][delegate] = amount;
+		
+		emit Approval(msg.sender, delegate, amount);
+		
 		return true;
 	}
 
@@ -73,17 +77,19 @@ contract TestCoin {
 		return allowed[owner][delegate];
 	}
 
-	function transferFrom(address _from, address _to, uint numTokens) public returns (bool) {
+	function transferFrom(address _from, address _to, uint _amount) public returns (bool) {
 		require(paused == false, "Contract Paused");
 		require(!isBlacklisted[_from], "Recipient is backlisted");
 		
-		require(numTokens <= balances[_from]);
-		require(numTokens <= allowed[_from][msg.sender]);
+		require(_amount <= balances[_from]);
+		require(_amount <= allowed[_from][msg.sender]);
 
-		balances[_from] -= numTokens;
-		allowed[_from][msg.sender] -= numTokens;
-		balances[_to] += numTokens;
-		emit Transfer(_from, _to, numTokens);
+		balances[_from] -= _amount;
+		allowed[_from][msg.sender] -= _amount;
+		balances[_to] += _amount;
+		
+		emit Transfer(_from, _to, _amount);
+		
 		return true;
 	}
 }
